@@ -34,6 +34,7 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
+import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -42,23 +43,32 @@ import static org.junit.Assert.assertThat;
 /**
  * Basic sample for unbundled UiAutomator.
  */
+
 // *** ***
 //
 // ./gradlew build
 // ./gradlew connectedAndroidTest
 // adb shell am instrument -w -r   -e debug false com.example.android.testing.uiautomator.BasicSample.test/androidx.test.runner.AndroidJUnitRunner
+// 
+// === === === 
+// 
+// C:\tools\android\tools\bin
+// uiautomatorviewer.bat
 //
+// https://m.habr.com/ru/company/intel/blog/205864/
+// 
 // *** *** 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
 public class ChangeTextBehaviorTest {
 
     private static final String BASIC_SAMPLE_PACKAGE
-            = "com.example.android.testing.uiautomator.BasicSample";
+        //     = "com.example.android.testing.uiautomator.BasicSample";
+        = "ee.mtakso.client";
 
     private static final int LAUNCH_TIMEOUT = 5000;
 
-    private static final String STRING_TO_BE_TYPED = "Orsen!!!";
+    private static final String STRING_TO_BE_TYPED = "Orsen";
 
     private UiDevice mDevice;
 
@@ -86,40 +96,55 @@ public class ChangeTextBehaviorTest {
         mDevice.wait(Until.hasObject(By.pkg(BASIC_SAMPLE_PACKAGE).depth(0)), LAUNCH_TIMEOUT);
     }
 
-    @Test
-    public void checkPreconditions() {
-        assertThat(mDevice, notNullValue());
-    }
+//     @Test
+//     public void checkPreconditions() {
+//         assertThat(mDevice, notNullValue());
+//     }
 
     @Test
     public void testChangeText_sameActivity() {
         // Type text and then press the button.
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
-                .setText(STRING_TO_BE_TYPED);
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "changeTextBt"))
-                .click();
+        // mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
+        //         .setText(STRING_TO_BE_TYPED);
 
+        // ee.mtakso.client:id/setPickupButton
+        // mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "setPickupButton"))
+        try {
+            sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mDevice.findObject(By.res("ee.mtakso.client:id/setPickupButton"))
+                .click();
+        try {
+            sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mDevice.findObject(By.text("Введите место подачи"))
+                .setText(STRING_TO_BE_TYPED);
         // Verify the test is displayed in the Ui
-        UiObject2 changedText = mDevice
-                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "textToBeChanged")),
-                        500 /* wait 500ms */);
-        assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
+        // UiObject2 changedText = mDevice
+        //         .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "textToBeChanged")),
+        //                 500 /* wait 500ms */);
+        // assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));        
+        assertThat("", is(equalTo("")));
     }
 
-    @Test
-    public void testChangeText_newActivity() {
-        // Type text and then press the button.
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
-                .setText(STRING_TO_BE_TYPED);
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "activityChangeTextBtn"))
-                .click();
+//     @Test
+//     public void testChangeText_newActivity() {
+//         // Type text and then press the button.
+//         mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
+//                 .setText(STRING_TO_BE_TYPED);
+//         mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "activityChangeTextBtn"))
+//                 .click();
 
-        // Verify the test is displayed in the Ui
-        UiObject2 changedText = mDevice
-                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "show_text_view")),
-                        500 /* wait 500ms */);
-        assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
-    }
+//         // Verify the test is displayed in the Ui
+//         UiObject2 changedText = mDevice
+//                 .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "show_text_view")),
+//                         500 /* wait 500ms */);
+//         assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
+//     }
 
     /**
      * Uses package manager to find the package name of the device launcher. Usually this package
