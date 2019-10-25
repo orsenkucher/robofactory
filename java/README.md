@@ -1,2 +1,0 @@
-# ./gradlew connectedAndroidTest
-*./gradlew connectedAndroidTest*
